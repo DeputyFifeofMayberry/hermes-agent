@@ -1,0 +1,10 @@
+{
+  "mode": "cloud",
+  "api_url": "https://api.hindsight.vectorize.io",
+  "bank_id": "hermes-research",
+  "recall_budget": "mid",
+  "memory_mode": "hybrid",
+  "auto_retain": true,
+  "auto_recall": true,
+  "retain_async": true
+}
