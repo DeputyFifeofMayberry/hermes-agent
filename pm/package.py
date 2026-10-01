@@ -39,8 +39,12 @@ def compose_env(diffs: list[dict], base: Optional[dict] = None) -> dict[str, str
     if path_dirs:
         key = next((k for k in env if k.upper() == "PATH"), "PATH")
         existing = env.get(key, "")
-        prefix = os.pathsep.join(path_dirs)
-        env[key] = f"{prefix}{os.pathsep}{existing}" if existing else prefix
+        # Repeated activation must not grow PATH past cmd.exe's environment
+        # limit; npm adds more directories before starting lifecycle scripts.
+        unique: dict[str, str] = {}
+        for entry in [*path_dirs, *(existing.split(os.pathsep) if existing else [])]:
+            unique.setdefault(os.path.normcase(entry), entry)
+        env[key] = os.pathsep.join(unique.values())
     return env
 
 
